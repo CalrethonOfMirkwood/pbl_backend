@@ -19,7 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-//import org.springframework.security.web.header.writers.StaticHeadersWriter;
+import org.springframework.security.web.header.writers.StaticHeadersWriter;
 
 
 
@@ -70,19 +70,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 				.antMatchers("/mvc/person/update/**", "/mvc/person/delete/**").authenticated()
 				.antMatchers("/api/person/**").authenticated()
-				.antMatchers("/api/**").permitAll()
 				.and()
-			/* 
-			// support cors on localhost
+			// support cors
 			.cors().and()
 			.headers()
-				.addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Origin", "*"))
-				.addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Methods", "POST, GET"))
-				.addHeaderWriter(new StaticHeadersWriter("Access-Control-Max-Age", "3600"))
 				.addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Credentials", "true"))
-				.addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Headers", "Origin,Accept,X-Requested-With,Content-Type,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization"))
+				.addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-ExposedHeaders", "*", "Authorization"))
+				.addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Headers", "Content-Type", "Authorization", "x-csrf-token"))
+				.addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-MaxAge", "600"))
+				.addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Methods", "POST", "GET", "OPTIONS", "HEAD"))
+				//.addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Origin", "https://nighthawkcoders.github.io", "http://localhost:4000"))
 				.and()
-			*/
 			.formLogin()
                 .loginPage("/login")
                 .and()
