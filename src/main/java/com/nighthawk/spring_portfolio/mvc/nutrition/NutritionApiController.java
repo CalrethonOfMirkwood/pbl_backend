@@ -27,7 +27,7 @@ public class NutritionApiController {
     {
         // Backend Food Object
         Food food_obj = new Food();
-        food_obj.setFood(food);  // evaluates Leap Year
+        food_obj.setFood(food);  // evaluates food
       
         // Turn Food Object into JSON
         ObjectMapper mapper = new ObjectMapper(); 
