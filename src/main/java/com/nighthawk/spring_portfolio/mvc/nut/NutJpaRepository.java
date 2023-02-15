@@ -14,9 +14,9 @@ public interface NutJpaRepository extends JpaRepository<Nut, Long> {
     // A
     List<Nut> findByFoodIgnoreCase(String food); // look to see if Joke(s) exist
 
-    @Query(value = "SELECT * FROM Practice p WHERE p.problem LIKE ?1 or p.Tags LIKE ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM Nut p WHERE p.food LIKE ?1 or p.category LIKE ?1", nativeQuery = true)
     List<Nut> findByFoodorCategory(String term);
 
-    @Query(value = "SELECT max(id) FROM Practice")
+    @Query(value = "SELECT max(id) FROM Nut")
     long getMaxId();
 }
