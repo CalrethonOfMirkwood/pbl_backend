@@ -1,4 +1,4 @@
-package com.nighthawk.spring_portfolio.mvc.nutritionstorage;
+package com.nighthawk.spring_portfolio.mvc.nut;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
