@@ -21,7 +21,7 @@ public class NutInit {
             // Fail safe data validation
             // starting jokes
             final String[] foodArray = {
-                    "apple", "65.0", "raw",
+                    "apple", 
 
             };
 
@@ -30,7 +30,7 @@ public class NutInit {
             for (String food : foodArray) {
                 List<Nut> test = repository.findByFoodIgnoreCase(food); // JPA lookup
                 if (test.size() == 0)
-                    repository.save(new Nut(null, food, 120, "raw")); // JPA save
+                    repository.save(new Nut(null, food, 94.64, "raw")); // JPA save
             }
 
         };

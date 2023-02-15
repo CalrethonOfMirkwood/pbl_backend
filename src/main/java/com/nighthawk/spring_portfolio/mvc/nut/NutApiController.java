@@ -56,8 +56,7 @@ public class NutApiController {
     /*
      * GET individual Person using ID
      */
-    @GetMapping("/search")
-    public ResponseEntity<List<Nut>> getPerson(@RequestParam("food") String term) {
+    public ResponseEntity<List<Nut>> getFood(@RequestParam("food") String term) {
         return new ResponseEntity<>(repository.findByFoodorCategory(term), HttpStatus.OK);
     }
 
@@ -71,7 +70,7 @@ public class NutApiController {
     }
 
     @PostMapping("/share/{id}")
-    public ResponseEntity<Nut> setTags(@PathVariable long id) {
+    public ResponseEntity<Nut> setCategory(@PathVariable long id) {
         // Bad ID
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
