@@ -21,7 +21,7 @@ public class NutInit {
             // Fail safe data validation
             // starting jokes
             final String[] foodArray = {
-                    "apple", "120", "raw",
+                    "apple", "65.0", "raw",
 
             };
 
