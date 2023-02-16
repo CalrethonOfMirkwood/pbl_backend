@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @RestController // annotation to simplify the creation of RESTful web services
 @RequestMapping("/api/planner") // all requests in file begin with this URI
-public class PlannerApiController {
+public class PlannerController {
 
     // Autowired enables Control to connect URI request and POJO Object to easily
     // for Database CRUD operations
@@ -23,16 +23,23 @@ public class PlannerApiController {
      * @GetMapping annotation is used for mapping HTTP GET requests onto specific
      * handler methods.
      */
-    @GetMapping("/list")
+    @GetMapping("/")
     public ResponseEntity<List<Planner>> getPlanner() {
         // ResponseEntity returns List of Jokes provide by JPA findAll()
         return new ResponseEntity<>(repository.findAll(), HttpStatus.OK);
     }
 
     @PostMapping("/create/{name}/{day}/{meal}")
-    public ResponseEntity<Planner> createPlanner(@PathVariable String name, @PathVariable String day, @PathVariable String meal) {
+    public ResponseEntity<Planner> createPlanner(@PathVariable String name,
+            @PathVariable String day, @PathVariable String meal) {
         repository.saveAndFlush(new Planner(null, name, day, meal));
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/search/{name}")
+    public ResponseEntity<List<Planner>> searchPlanner(@PathVariable String name) {
+        List<Planner> listings = repository.findByNameIgnoreCase(name);
+        return new ResponseEntity<>(listings,HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
