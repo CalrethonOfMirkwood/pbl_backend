@@ -33,7 +33,7 @@ public class FoodAPI {
                     int caloriesIndex = response.indexOf("nf_calories");
                     int endCaloriesIndex = response.indexOf("nf_calories_from_fat");
 
-                    calories = response.substring(caloriesIndex + 13, endCaloriesIndex -1);
+                    calories = response.substring(caloriesIndex + 13, endCaloriesIndex -2);
                     //System.out.println("Calories in "+food+": " + calories);
                     
                 } else {
@@ -54,7 +54,7 @@ public class FoodAPI {
     public static void main(String[] args) {
         // Public access modifiers
 
-        System.out.println(String.valueOf(FoodAPI.findCalories("cupcake")));
+        System.out.println(String.valueOf(FoodAPI.findCalories("flour")));
         //String cal = Integer.toString(FoodAPI.findCalories("potato"));
         //System.out.println("Calories: " + cal);
     }
