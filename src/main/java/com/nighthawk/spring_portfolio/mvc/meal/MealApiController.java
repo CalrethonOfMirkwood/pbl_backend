@@ -22,9 +22,9 @@ public class MealApiController {
         return meals;
     }
 
-    @DeleteMapping("/{name}")
-    public List<Meal> deleteMeal(@PathVariable String name) {
-        meals.removeIf(meal -> meal.getName().equals(name));
+    @DeleteMapping("/{day}/{mealType}")
+        public List<Meal> deleteMeal(@PathVariable String day, @PathVariable String mealType) {
+        meals.removeIf(meal -> meal.getDay().equals(day) && meal.getMeal().equals(mealType));
         return meals;
-    }
+}
 }
