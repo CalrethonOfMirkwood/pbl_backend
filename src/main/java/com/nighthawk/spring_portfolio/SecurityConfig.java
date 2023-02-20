@@ -75,7 +75,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 			.cors().and()
 			.headers()
-				// DON'T UNCOMMENT WILL PROBABLY BREAK CORS .addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Origin", "*"))
+				.addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Origin", "https://sarayu-pr11.github.io"))
 				.addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Methods", "POST, GET"))
 				.addHeaderWriter(new StaticHeadersWriter("Access-Control-Max-Age", "3600"))
 				.addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Credentials", "true"))
