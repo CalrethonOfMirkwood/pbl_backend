@@ -68,6 +68,7 @@ public class PersonApiController {
                                              @RequestParam("password") String password,
                                              @RequestParam("name") String name,
                                              @RequestParam("dob") String dobString) {
+        System.out.println("Attempting to create account for "+name);
         Date dob;
         try {
             dob = new SimpleDateFormat("MM-dd-yyyy").parse(dobString);
@@ -75,8 +76,11 @@ public class PersonApiController {
             return new ResponseEntity<>(dobString +" error; try MM-dd-yyyy", HttpStatus.BAD_REQUEST);
         }
         // A person object WITHOUT ID will create a new record with default roles as student
+        System.out.println("11111111 checkpoint 11111111");
         Person person = new Person(email, password, name, dob);
+        System.out.println("22222222 checkpoint 22222222");
         repository.save(person);
+        System.out.println("33333333 checkpoint 33333333");
         return new ResponseEntity<>(email +" is created successfully", HttpStatus.CREATED);
     }
 
