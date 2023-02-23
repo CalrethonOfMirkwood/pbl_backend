@@ -48,7 +48,7 @@ public class JwtApiController {
 			.path("/")
 			.maxAge(3600)
 			.sameSite("none")
-			//.domain("sarayu-pr11.github.io")
+			.domain("csatri1.tk")
 			.build();
 		return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, tokenCookie.toString()).build();
 	}
