@@ -1,13 +1,12 @@
 package com.nighthawk.spring_portfolio.mvc.nut;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-//import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @RestController // annotation to simplify the creation of RESTful web services
 @RequestMapping("/api/nut") // all requests in file begin with this URI
@@ -25,53 +24,49 @@ public class NutApiController {
      * handler methods.
      */
     @GetMapping("/")
-    public ResponseEntity<List<Nut>> getFood() {
+    public ResponseEntity<List<Nut>> getNut() {
         // ResponseEntity returns List of Jokes provide by JPA findAll()
         return new ResponseEntity<>(repository.findAll(), HttpStatus.OK);
     }
 
-    /*
-     * Update Like
-     * 
-     * @PutMapping annotation is used for mapping HTTP PUT requests onto specific
-     * handler methods.
-     * 
-     * @PathVariable annotation extracts the templated part {id}, from the URI
-     */
-    @PostMapping("/add")
-    public ResponseEntity<Nut> addFood(@RequestParam("food") String food,
-            @RequestParam("calories") double calories,
-            @RequestParam("category") String category) {
-        repository.save(new Nut(null, food, calories, category)); // JPA save
-        long maxId = repository.getMaxId();
-        Optional<Nut> optional = repository.findById(maxId);
-        if (optional.isPresent()) {
-            Nut food1 = optional.get();
-            return new ResponseEntity<>(food1, HttpStatus.OK);
+    @PostMapping("/create/{food}/{calories}/{category}")
+    public ResponseEntity<Nut> createNut(@PathVariable String food,
+            @PathVariable double calories, @PathVariable String category) {
+        repository.saveAndFlush(new Nut(null, food, calories, category));
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/search/{food}")
+    public ResponseEntity<List<Nut>> searchNut(@PathVariable String food) {
+        List<Nut> listings = repository.findByFoodIgnoreCase(food);
+        return new ResponseEntity<>(listings,HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Nut> deleteListing(@PathVariable long id) {
+        Optional<Nut> optional = repository.findById(id);
+        if (optional.isPresent()) { // Good ID
+            Nut listing = optional.get(); // value from findByID
+            repository.deleteById(id); // value from findByID
+            return new ResponseEntity<>(listing, HttpStatus.OK); // OK HTTP response: status code, headers, and body
         }
         // Bad ID
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // Failed HTTP response: status code, headers, and body
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    /*
-     * GET individual Person using ID
-     */
-    public ResponseEntity<List<Nut>> getFood(@RequestParam("food") String term) {
-        return new ResponseEntity<>(repository.findByFoodorCategory(term), HttpStatus.OK);
-    }
-
-    /*
-     * Update Jeer
-     */
-    @PostMapping("/jeer/{id}")
-    public ResponseEntity<Nut> setJeer(@PathVariable long id) {
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Nut> updateListing(@PathVariable long id, @RequestBody Nut newListing) {
+        Optional<Nut> optional = repository.findById(id);
+        if (optional.isPresent()) { // Good ID
+            Nut listing = optional.get(); // value from findByID
+            listing.setFood(newListing.getFood()); // value from findByID
+            listing.setCalories(newListing.getCalories()); // value from findByID
+            listing.setCategory(newListing.getCategory()); // value from findByID
+            repository.save(listing);
+            return new ResponseEntity<>(listing, HttpStatus.OK); // OK HTTP response: status code, headers, and body
+        }
         // Bad ID
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping("/share/{id}")
-    public ResponseEntity<Nut> setCategory(@PathVariable long id) {
-        // Bad ID
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
 }
