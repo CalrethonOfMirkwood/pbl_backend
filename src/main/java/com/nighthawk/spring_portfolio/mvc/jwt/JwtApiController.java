@@ -47,8 +47,8 @@ public class JwtApiController {
 			.secure(true)
 			.path("/")
 			.maxAge(3600)
-			.sameSite("none")
-			.domain("csatri1.tk")
+			//.sameSite("none")
+			//.domain("csatri1.tk")
 			.build();
 		return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, tokenCookie.toString()).build();
 	}
