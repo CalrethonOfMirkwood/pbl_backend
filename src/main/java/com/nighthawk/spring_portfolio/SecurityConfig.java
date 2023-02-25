@@ -72,6 +72,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/api/person/").authenticated()
 				.antMatchers("/api/person/post").permitAll()
 				.antMatchers("/api/planner/").permitAll()
+				.antMatchers("/api/planner/create").permitAll()
+
 				.anyRequest().permitAll()
 				.and()
 			// support cors
