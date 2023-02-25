@@ -1,137 +1,103 @@
-
 <!DOCTYPE html>
 <html>
   <head>
     <title>Meal Planner</title>
+    <meta charset="UTF-8" />
   </head>
   <body>
+    <h1>Meal Planner</h1>
+
+    <div>
+      <label for="meal-name">Meal Name:</label>
+      <input type="text" id="meal-name" />
+      <label for="day">Day:</label>
+      <input type="text" id="day" />
+      <label for="meal-type">Meal Type:</label>
+      <input type="text" id="meal-type" />
+      <button id="add-meal">Add Meal</button>
+    </div>
+
     <table id="meal-table">
       <thead>
         <tr>
+          <th>Meal Name</th>
+          <th>Day</th>
+          <th>Meal Type</th>
           <th></th>
-          <th>Breakfast</th>
-          <th>Snack</th>
-          <th>Lunch</th>
-          <th>Snack</th>
-          <th>Dinner</th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td>Monday</td>
-          <td class="meal-cell" data-day="Monday" data-meal="Breakfast"></td>
-          <td class="meal-cell" data-day="Monday" data-meal="Snack"></td>
-          <td class="meal-cell" data-day="Monday" data-meal="Lunch"></td>
-          <td class="meal-cell" data-day="Monday" data-meal="Snack"></td>
-          <td class="meal-cell" data-day="Monday" data-meal="Dinner"></td>
-        </tr>
-        <tr>
-          <td>Tuesday</td>
-          <td class="meal-cell" data-day="Tuesday" data-meal="Breakfast"></td>
-          <td class="meal-cell" data-day="Tuesday" data-meal="Snack"></td>
-          <td class="meal-cell" data-day="Tuesday" data-meal="Lunch"></td>
-          <td class="meal-cell" data-day="Tuesday" data-meal="Snack"></td>
-          <td class="meal-cell" data-day="Tuesday" data-meal="Dinner"></td>
-        </tr>
-        <td>Wednesday</td>
-        <td class="meal-cell" data-day="Wednesday" data-meal="Breakfast"></td>
-        <td class="meal-cell" data-day="Wednesday" data-meal="Snack"></td>
-        <td class="meal-cell" data-day="Wednesday" data-meal="Lunch"></td>
-        <td class="meal-cell" data-day="Wednesday" data-meal="Snack"></td>
-        <td class="meal-cell" data-day="Wednesday" data-meal="Dinner"></td>
-        </tr>
-        <tr>
-          <td>Thursday</td>
-          <td class="meal-cell" data-day="Thursday" data-meal="Breakfast"></td>
-          <td class="meal-cell" data-day="Thursday" data-meal="Snack"></td>
-          <td class="meal-cell" data-day="Thursday" data-meal="Lunch"></td>
-          <td class="meal-cell" data-day="Thursday" data-meal="Snack"></td>
-          <td class="meal-cell" data-day="Thursday" data-meal="Dinner"></td>
-        </tr>
-        <td>Friday</td>
-        <td class="meal-cell" data-day="Friday" data-meal="Breakfast"></td>
-        <td class="meal-cell" data-day="Friday" data-meal="Snack"></td>
-        <td class="meal-cell" data-day="Friday" data-meal="Lunch"></td>
-        <td class="meal-cell" data-day="Friday" data-meal="Snack"></td>
-        <td class="meal-cell" data-day="Friday" data-meal="Dinner"></td>
-        </tr>
-        <tr>
-          <td>Saturday</td>
-          <td class="meal-cell" data-day="Saturday" data-meal="Breakfast"></td>
-          <td class="meal-cell" data-day="Saturday" data-meal="Snack"></td>
-          <td class="meal-cell" data-day="Saturday" data-meal="Lunch"></td>
-          <td class="meal-cell" data-day="Saturday" data-meal="Snack"></td>
-          <td class="meal-cell" data-day="Saturday" data-meal="Dinner"></td>
-        </tr>
-        <tr>
-          <td>Sunday</td>
-          <td class="meal-cell" data-day="Sunday" data-meal="Breakfast"></td>
-          <td class="meal-cell" data-day="Sunday" data-meal="Snack"></td>
-          <td class="meal-cell" data-day="Sunday" data-meal="Lunch"></td>
-          <td class="meal-cell" data-day="Sunday" data-meal="Snack"></td>
-          <td class="meal-cell" data-day="Sunday" data-meal="Dinner"></td>
-        </tr>
-        <!-- Add rows for the rest of the week -->
-      </tbody>
+      <tbody></tbody>
     </table>
+
     <script>
-      const mealTable = document.querySelector("#meal-table");
-      mealTable.addEventListener("click", async (event) => {
-        if (!event.target.classList.contains("meal-cell")) {
-          return;
-        }
-        const day = event.target.dataset.day;
-        const meal = event.target.dataset.meal;
-        const name = prompt("Enter meal name:");
-        const description = prompt("Enter meal description:");
-        if (!name || !description) {
-          return;
-        }
-        const response = await fetch("/meals", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ name, description, day, meal }),
-        });
-        if (!response.ok) {
-          alert("Failed to add meal. Please try again later.");
-          return;
-        }
-        event.target.textContent = name;
+      const mealTable = document.querySelector("#meal-table tbody");
+      const addMealBtn = document.querySelector("#add-meal");
+      const mealNameInput = document.querySelector("#meal-name");
+      const dayInput = document.querySelector("#day");
+      const mealTypeInput = document.querySelector("#meal-type");
+
+      addMealBtn.addEventListener("click", () => {
+        const name = mealNameInput.value;
+        const day = dayInput.value;
+        const mealType = mealTypeInput.value;
+
+        const meal = { name, day, mealType };
+
+        fetch("http://localhost:8230/api/planner/create/" + name + "/" + day + "/" + mealType, { method: "POST" })
+          .then((res) => res.json())
+          .then((data) => {
+            addMealToTable(data);
+            mealNameInput.value = "";
+            dayInput.value = "";
+            mealTypeInput.value = "";
+          })
+          .catch((err) => console.log(err));
       });
 
-    // Save the updated data to local storage
-    const meals = JSON.parse(localStorage.getItem("meals")) || [];
-    meals.push({ day, meal, name, description });
-    localStorage.setItem("meals", JSON.stringify(meals));
+      function getMeals() {
+        fetch("http://localhost:8230/api/planner/")
+          .then((res) => res.json())
+          .then((data) => {
+            mealTable.innerHTML = "";
+            data.forEach(addMealToTable);
+          })
+          .catch((err) => console.log(err));
+      }
 
-  // Load data from local storage when the page loads
-  window.addEventListener("load", () => {
-    const meals = JSON.parse(localStorage.getItem("meals")) || [];
-    meals.forEach((meal) => {
-      const cell = document.querySelector(
-        `td[data-day="${meal.day}"][data-meal="${meal.meal}"]`
-      );
-      localStorage.clear();
+      function addMealToTable(meal) {
+        const row = document.createElement("tr");
+        const nameCell = document.createElement("td");
+        const dayCell = document.createElement("td");
+        const mealTypeCell = document.createElement("td");
+        const deleteCell = document.createElement("td");
+        const deleteButton = document.createElement("button");
+        deleteButton.innerHTML = "Delete";
+        deleteButton.addEventListener("click", () => {
+          deleteMeal(meal);
+        });
+        nameCell.textContent = meal.name;
+        dayCell.textContent = meal.day;
+        mealTypeCell.textContent = meal.meal;
+        deleteCell.appendChild(deleteButton);
+        row.appendChild(nameCell);
+        row.appendChild(dayCell);
+        row.appendChild(mealTypeCell);
+        row.appendChild(deleteCell);
+        mealTable.appendChild(row);
+      }
 
+      function deleteMeal(meal) {
+        fetch(
+          "http://localhost:8230/api/planner/delete/" + meal.id,
+          { method: "DELETE" }
+        )
+          .then(() => {
+            getMeals();
+          })
+          .catch((err) => console.log(err));
+      }
 
-    });
-  });
+      getMeals();
     </script>
   </body>
-  <style>
-    table {
-  border-collapse: collapse;
-}
-
-th, td {
-  border: 1px solid black;
-  padding: 8px;
-}
-
-th {
-  background-color: lightgray;
-}
-  </style>
 </html>
