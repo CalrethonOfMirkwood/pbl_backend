@@ -44,12 +44,18 @@ public class PlannerController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Planner> deleteListing(@PathVariable long id) {
+        System.out.println("planner delete checkpoint 1.  id is "+id);
         Optional<Planner> optional = repository.findById(id);
+        System.out.println("planner delete checkpoint 2");
         if (optional.isPresent()) { // Good ID
+            System.out.println("planner delete checkpoint 3");
             Planner listing = optional.get(); // value from findByID
+            System.out.println("planner delete checkpoint 4");
             repository.deleteById(id); // value from findByID
+            System.out.println("planner delete checkpoint 5");
             return new ResponseEntity<>(listing, HttpStatus.OK); // OK HTTP response: status code, headers, and body
         }
+        System.out.println("planner delete checkpoint 6.  Bad request.");
         // Bad ID
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
